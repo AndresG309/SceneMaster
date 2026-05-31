@@ -5,6 +5,7 @@ using UnityEngine.SceneManagement;
 public class Tester_SceneMaster : MonoBehaviour
 {
     public static Tester_SceneMaster Instance;
+    public TransitionEffect effect;
     int index;
     void Awake()
     {
@@ -27,7 +28,11 @@ public class Tester_SceneMaster : MonoBehaviour
             if (index >= SceneManager.sceneCountInBuildSettings) index = 0;
             if (Input.GetKeyDown(KeyCode.Return))
             {
-                SceneMaster.Instance.TransitionToScene(index, callbackFunction());
+                SceneMaster.Instance.TransitionToScene(index, effect, callbackFunction());
+            }
+            else if (Input.GetKeyDown(KeyCode.Space))
+            {
+                SceneMaster.Instance.TransitionToScene(index, effect);
             }
             else
             {
@@ -40,6 +45,10 @@ public class Tester_SceneMaster : MonoBehaviour
         Debug.Log("Iniciando callback desde Tester_SceneMaster");
         yield return new WaitForSeconds(3f);
         Debug.Log("Callback desde Tester_SceneMaster terminado");
+    }
+    public void setMastersEffect()
+    {
+
     }
 }
 
