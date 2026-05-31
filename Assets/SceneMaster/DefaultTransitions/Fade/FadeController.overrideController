@@ -6,10 +6,10 @@ AnimatorOverrideController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: CircleController
+  m_Name: FadeController
   m_Controller: {fileID: 9100000, guid: ef7a19bea1adf9444b7ea5d56ca00f86, type: 2}
   m_Clips:
   - m_OriginalClip: {fileID: 7400000, guid: bb5e6199f7c0e3f43bd9066e431707e9, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 99d3a3c598884fd45910aef3b4a3f1a5, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 35acb96432a29394ea72a1ed16811af3, type: 2}
   - m_OriginalClip: {fileID: 7400000, guid: c75662dce3e91794daa0eb94785d7641, type: 2}
-    m_OverrideClip: {fileID: 7400000, guid: 5603cbbd41e68414c891ead400e1b465, type: 2}
+    m_OverrideClip: {fileID: 7400000, guid: 3c938a8d56d77984dbaea388c590e9f5, type: 2}
