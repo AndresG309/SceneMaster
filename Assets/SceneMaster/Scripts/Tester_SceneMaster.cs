@@ -3,10 +3,19 @@ using UnityEngine.SceneManagement;
 
 public class Tester_SceneMaster : MonoBehaviour
 {
+    public static Tester_SceneMaster Instance;
     int index;
     void Awake()
     {
-        DontDestroyOnLoad(this);
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            Instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        }
     }
     void Update()
     {
