@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 [RequireComponent(typeof(Animator))]
-public class FadeTransition : TransitionEffect
+public class SimpleTransition : TransitionEffect
 {
     Animator animator;
     bool isPlaying = false;
@@ -9,6 +9,7 @@ public class FadeTransition : TransitionEffect
     void Start()
     {
         animator = GetComponent<Animator>();
+        gameObject.SetActive(false);
     }
     public override IEnumerator StartTransition()
     {
