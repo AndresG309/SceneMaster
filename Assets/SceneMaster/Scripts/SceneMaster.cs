@@ -13,6 +13,7 @@ public class SceneMaster : MonoBehaviour
 
     TransitionEffect transitionCanvas;
     List<StringEffectPair> registeredTransitionsNames = new();
+    bool isChangingScene;
 
     void Awake()
     {
@@ -28,9 +29,10 @@ public class SceneMaster : MonoBehaviour
     }
     void Start()
     {
+        isChangingScene = false;
         if (defaultTransition == null)
         {
-            Debug.Log("Default Transition missing on SceneMaster");
+            Debug.Log("[SceneMaster] Default Transition missing.");
         }
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -46,6 +48,7 @@ public class SceneMaster : MonoBehaviour
     }
     public void TransitionToScene(int index, TransitionEffect transition = null, IEnumerator callback = null)
     {
+        if (isChangingScene) return;
         if (transition != null)
         {
             transitionCanvas = transition;
@@ -54,11 +57,17 @@ public class SceneMaster : MonoBehaviour
         {
             transitionCanvas = defaultTransition;
         }
+        if (transitionCanvas == null)
+        {
+            Debug.LogWarning("[SceneMaster] There is no transition assigned.");
+            return;
+        }
         StartCoroutine(performTransition(index, callback));
     }
 
     IEnumerator performTransition(int index, IEnumerator callback)
     {
+        isChangingScene = true;
         registerEffect();
         transitionCanvas.gameObject.SetActive(true);
         yield return null;
@@ -68,6 +77,7 @@ public class SceneMaster : MonoBehaviour
         yield return transitionCanvas.EndTransition();
         yield return null;
         transitionCanvas.gameObject.SetActive(false);
+        isChangingScene = false;
     }
     void registerEffect()
     {
@@ -78,7 +88,7 @@ public class SceneMaster : MonoBehaviour
             {
                 // If the name of the transition object that is trying to be assigned is already in the registered effects list, ignore the new assignment
                 transitionCanvas = pair.effect;
-                Debug.Log("[SceneMaster] The effect received is already registered. Using existing register.");
+                Debug.Log("[SceneMaster] The effect received is already registered. Using existing registry.");
                 return;
             }
         }
