@@ -1,4 +1,5 @@
 using System.Collections;
+using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -27,7 +28,7 @@ public class SceneMaster : MonoBehaviour
 
     IEnumerator performTransition(int index)
     {
-        instantiateEffect();
+        setEffectAsChild();
         yield return transitionCanvas.StartTransition();
         yield return loadScene(index);
         yield return transitionCanvas.EndTransition();
@@ -37,12 +38,12 @@ public class SceneMaster : MonoBehaviour
         SceneManager.LoadScene(index);
         yield return null;
     }
-    void instantiateEffect()
+    void setEffectAsChild()
     {
         GameObject transitionObject = transitionCanvas.gameObject;
         if (transitionObject.transform.parent != this.gameObject)
         {
-            transitionCanvas = Instantiate(transitionObject, this.gameObject.transform).GetComponent<TransitionEffect>();
+            transitionObject.transform.SetParent(this.gameObject.transform, false);
         }
     }
 }

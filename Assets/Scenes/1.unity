@@ -225,6 +225,7 @@ GameObject:
   - component: {fileID: 193078562}
   - component: {fileID: 193078564}
   - component: {fileID: 193078563}
+  - component: {fileID: 193078565}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -289,6 +290,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 193078561}
   m_CullTransparentMesh: 1
+--- !u!225 &193078565
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 193078561}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &349605066
 GameObject:
   m_ObjectHideFlags: 0
@@ -672,7 +685,6 @@ GameObject:
   - component: {fileID: 1851627130}
   - component: {fileID: 1851627129}
   - component: {fileID: 1851627128}
-  - component: {fileID: 1851627126}
   - component: {fileID: 1851627133}
   m_Layer: 5
   m_Name: FadeTransition
@@ -681,18 +693,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!225 &1851627126
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1851627125}
-  m_Enabled: 1
-  m_Alpha: 0
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!114 &1851627128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -705,8 +705,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 275fe11f1935f824ab9de863b4082c7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fadeIn: {fileID: 7400000, guid: 35acb96432a29394ea72a1ed16811af3, type: 2}
-  fadeOut: {fileID: 7400000, guid: 3c938a8d56d77984dbaea388c590e9f5, type: 2}
 --- !u!114 &1851627129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -790,21 +788,27 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!111 &1851627133
-Animation:
+--- !u!95 &1851627133
+Animator:
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1851627125}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 0
-  m_AnimatePhysics: 0
-  m_CullingType: 0
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: ef7a19bea1adf9444b7ea5d56ca00f86, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &2091989350
 GameObject:
   m_ObjectHideFlags: 0
@@ -947,6 +951,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6157470328914930282, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
+      propertyPath: transitionCanvas
+      value: 
+      objectReference: {fileID: 1851627128}
     - target: {fileID: 6479607259641432581, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
       propertyPath: m_Name
       value: SceneMaster

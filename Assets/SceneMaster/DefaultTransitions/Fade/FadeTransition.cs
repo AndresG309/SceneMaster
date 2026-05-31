@@ -1,26 +1,27 @@
 using System.Collections;
 using UnityEngine;
+[RequireComponent(typeof(Animator))]
 public class FadeTransition : TransitionEffect
 {
-    Animation animationPlayer;
-    public AnimationClip fadeIn;
-    public AnimationClip fadeOut;
+    Animator animator;
+    bool isPlaying = false;
 
     void Start()
     {
-        animationPlayer = GetComponent<Animation>();
+        animator = GetComponent<Animator>();
     }
     public override IEnumerator StartTransition()
     {
-        animationPlayer.clip = fadeIn;
-        animationPlayer.Play();
-        yield return new WaitForSeconds(fadeIn.length);
+        isPlaying = true;
+        animator.SetTrigger("in");
+        while (isPlaying) yield return null;
     }
 
     public override IEnumerator EndTransition()
     {
-        animationPlayer.clip = fadeOut;
-        animationPlayer.Play();
-        yield return new WaitForSeconds(fadeOut.length);
+        isPlaying = true;
+        animator.SetTrigger("out");
+        while (isPlaying) yield return null;
     }
+    public void animationFinished() => isPlaying = false;
 }
