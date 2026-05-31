@@ -1,5 +1,4 @@
 using System.Collections;
-using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -12,7 +11,7 @@ public class SceneMaster : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(this);
+            Destroy(this.gameObject);
         }
         else
         {
@@ -21,22 +20,22 @@ public class SceneMaster : MonoBehaviour
         }
     }
 
-    public void TransitionToScene(int index)
+    public void TransitionToScene(int index, IEnumerator callback = null)
     {
-        StartCoroutine(performTransition(index));
+        StartCoroutine(performTransition(index, callback));
     }
 
-    IEnumerator performTransition(int index)
+    IEnumerator performTransition(int index, IEnumerator callback)
     {
         setEffectAsChild();
-        yield return transitionCanvas.StartTransition();
-        yield return loadScene(index);
-        yield return transitionCanvas.EndTransition();
-    }
-    IEnumerator loadScene(int index)
-    {
-        SceneManager.LoadScene(index);
+        transitionCanvas.gameObject.SetActive(true);
         yield return null;
+        yield return transitionCanvas.StartTransition();
+        SceneManager.LoadScene(index);
+        if (callback != null) yield return callback;
+        yield return transitionCanvas.EndTransition();
+        yield return null;
+        transitionCanvas.gameObject.SetActive(false);
     }
     void setEffectAsChild()
     {

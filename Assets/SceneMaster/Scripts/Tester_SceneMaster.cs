@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,13 +20,26 @@ public class Tester_SceneMaster : MonoBehaviour
     }
     void Update()
     {
+
         if (Input.anyKeyDown)
         {
             index = SceneManager.GetActiveScene().buildIndex + 1;
             if (index >= SceneManager.sceneCountInBuildSettings) index = 0;
-            Debug.Log(index);
-            SceneMaster.Instance.TransitionToScene(index);
+            if (Input.GetKeyDown(KeyCode.Return))
+            {
+                SceneMaster.Instance.TransitionToScene(index, callbackFunction());
+            }
+            else
+            {
+                SceneMaster.Instance.TransitionToScene(index);
+            }
         }
+    }
+    IEnumerator callbackFunction()
+    {
+        Debug.Log("Iniciando callback desde Tester_SceneMaster");
+        yield return new WaitForSeconds(3f);
+        Debug.Log("Callback desde Tester_SceneMaster terminado");
     }
 }
 
