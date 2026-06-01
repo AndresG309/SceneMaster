@@ -129,6 +129,7 @@ public class SceneMaster : MonoBehaviour
                 // If the name of the transition object that is trying to be assigned is already in the registered effects list, ignore the new assignment
                 Debug.Log("[SceneMaster] The effect received is already registered. Using existing registry.");
                 transitionCanvas = pair.effect;
+                return;
             }
         }
         transitionObject.transform.SetParent(transform, false);
