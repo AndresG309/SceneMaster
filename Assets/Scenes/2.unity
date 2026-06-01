@@ -153,6 +153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effect: {fileID: 382397046}
   destroyOnLoad: 1
+  changeSceneAsync: 1
   useName: 1
   sceneName: 1
   changeToNextSceneOnBuildSettings: 0

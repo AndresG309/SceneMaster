@@ -47,15 +47,36 @@ public class SceneMaster : MonoBehaviour
             }
         }
     }
-    #region API PÚBLICA
+    #region Public API
 
     public int CurrentSceneIndex { get; private set; }
     public string CurrentSceneName => SceneManager.GetActiveScene().name;
 
-    /// <summary>
-    /// Transitions to a scene by its name
-    /// </summary>
-    public void TransitionToScene(string sceneName, TransitionEffect transition = null, IEnumerator callback = null)
+    #region Overcharges
+
+    // =======================================================
+    // With Index
+    // =======================================================
+    public void TransitionToScene(int index) => TransitionToScene(index, null, null, false);
+    public void TransitionToScene(int index, bool loadAsync) => TransitionToScene(index, null, null, loadAsync);
+    public void TransitionToScene(int index, TransitionEffect transition) => TransitionToScene(index, transition, null, false);
+    public void TransitionToScene(int index, TransitionEffect transition, bool loadAsync) => TransitionToScene(index, transition, null, loadAsync);
+    public void TransitionToScene(int index, IEnumerator callback) => TransitionToScene(index, null, callback, false);
+    public void TransitionToScene(int index, IEnumerator callback, bool loadAsync) => TransitionToScene(index, null, callback, loadAsync);
+
+    // =======================================================
+    // With Name
+    // =======================================================
+    public void TransitionToScene(string sceneName) => TransitionToScene(sceneName, null, null, false);
+    public void TransitionToScene(string sceneName, bool loadAsync) => TransitionToScene(sceneName, null, null, loadAsync);
+    public void TransitionToScene(string sceneName, TransitionEffect transition) => TransitionToScene(sceneName, transition, null, false);
+    public void TransitionToScene(string sceneName, TransitionEffect transition, bool loadAsync) => TransitionToScene(sceneName, transition, null, loadAsync);
+    public void TransitionToScene(string sceneName, IEnumerator callback) => TransitionToScene(sceneName, null, callback, false);
+    public void TransitionToScene(string sceneName, IEnumerator callback, bool loadAsync) => TransitionToScene(sceneName, null, callback, loadAsync);
+
+    #endregion
+
+    public void TransitionToScene(string sceneName, TransitionEffect transition, IEnumerator callback, bool loadAsync)
     {
         int sceneIndex = GetSceneIndex(sceneName);
         if (sceneIndex == -1)
@@ -63,12 +84,9 @@ public class SceneMaster : MonoBehaviour
             Debug.LogError($"[SceneMaster] Scene '{sceneName}' not found in Build Settings.");
             return;
         }
-        TransitionToScene(sceneIndex, transition, callback);
+        TransitionToScene(sceneIndex, transition, callback, loadAsync);
     }
-    /// <summary>
-    /// Transitions to a scene by its index in build settings
-    /// </summary>
-    public void TransitionToScene(int index, TransitionEffect transition = null, IEnumerator callback = null)
+    public void TransitionToScene(int index, TransitionEffect transition, IEnumerator callback, bool loadAsync)
     {
         if (isChangingScene) return;
         if (transition != null)
@@ -86,10 +104,11 @@ public class SceneMaster : MonoBehaviour
             return;
         }
         StopAllCoroutines();
-        StartCoroutine(performTransition(index, callback));
+        StartCoroutine(performTransition(index, callback, loadAsync));
     }
+
     #endregion
-    #region Métodos privados
+    #region Internal methods
     int GetSceneIndex(string sceneName)
     {
         int sceneCount = SceneManager.sceneCountInBuildSettings;
@@ -105,13 +124,24 @@ public class SceneMaster : MonoBehaviour
         return -1;
     }
 
-    IEnumerator performTransition(int index, IEnumerator callback)
+    IEnumerator performTransition(int index, IEnumerator callback, bool loadAsync)
     {
         isChangingScene = true;
         transitionCanvas.gameObject.SetActive(true);
         yield return null;
         yield return transitionCanvas.StartTransition();
-        SceneManager.LoadScene(index);
+        if (loadAsync)
+        {
+            AsyncOperation asyncOp = SceneManager.LoadSceneAsync(index);
+            asyncOp.allowSceneActivation = false;
+            yield return new WaitUntil(() => asyncOp.progress >= 0.9f);
+            asyncOp.allowSceneActivation = true;
+            yield return new WaitUntil(() => asyncOp.isDone);
+        }
+        else
+        {
+            SceneManager.LoadScene(index);
+        }
         CurrentSceneIndex = index;
         if (callback != null) yield return callback;
         yield return transitionCanvas.EndTransition();
