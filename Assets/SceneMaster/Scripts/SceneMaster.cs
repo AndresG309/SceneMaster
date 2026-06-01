@@ -51,6 +51,7 @@ public class SceneMaster : MonoBehaviour
         if (transition != null)
         {
             transitionCanvas = transition;
+            registerEffect();
         }
         else
         {
@@ -68,8 +69,6 @@ public class SceneMaster : MonoBehaviour
     IEnumerator performTransition(int index, IEnumerator callback)
     {
         isChangingScene = true;
-        if (transitionCanvas != defaultTransition) transitionCanvas = registerEffect();
-        yield return null;
         transitionCanvas.gameObject.SetActive(true);
         yield return null;
         yield return transitionCanvas.StartTransition();
@@ -80,7 +79,7 @@ public class SceneMaster : MonoBehaviour
         transitionCanvas.gameObject.SetActive(false);
         isChangingScene = false;
     }
-    TransitionEffect registerEffect()
+    void registerEffect()
     {
         GameObject transitionObject = transitionCanvas.gameObject;
         foreach (StringEffectPair pair in registeredTransitionsNames)
@@ -89,18 +88,13 @@ public class SceneMaster : MonoBehaviour
             {
                 // If the name of the transition object that is trying to be assigned is already in the registered effects list, ignore the new assignment
                 Debug.Log("[SceneMaster] The effect received is already registered. Using existing registry.");
-                return pair.effect;
+                transitionCanvas = pair.effect;
             }
         }
-        transitionObject.SetActive(true);
-        GameObject newTransitionObject = Instantiate(transitionObject, transform);
-        transitionObject.SetActive(false);
-        newTransitionObject.name = transitionObject.name;
-        TransitionEffect newEffect = newTransitionObject.GetComponent<TransitionEffect>();
-        registeredTransitionsNames.Add(new StringEffectPair(newTransitionObject.name, newEffect));
+        transitionObject.transform.parent = transform;
+        registeredTransitionsNames.Add(new StringEffectPair(transitionObject.name, transitionCanvas));
         
         Debug.Log("[SceneMaster] New effect received and registered.");
-        return newEffect;
     }
 
     [Serializable]
