@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Timers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,7 +31,7 @@ public class SceneMaster : MonoBehaviour
         isChangingScene = false;
         if (defaultTransition == null)
         {
-            Debug.Log("[SceneMaster] Default Transition missing.");
+            Debug.LogWarning("[SceneMaster] Default Transition missing.");
         }
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -62,13 +61,15 @@ public class SceneMaster : MonoBehaviour
             Debug.LogWarning("[SceneMaster] There is no transition assigned.");
             return;
         }
+        StopAllCoroutines();
         StartCoroutine(performTransition(index, callback));
     }
 
     IEnumerator performTransition(int index, IEnumerator callback)
     {
         isChangingScene = true;
-        registerEffect();
+        if (transitionCanvas != defaultTransition) transitionCanvas = registerEffect();
+        yield return null;
         transitionCanvas.gameObject.SetActive(true);
         yield return null;
         yield return transitionCanvas.StartTransition();
@@ -79,7 +80,7 @@ public class SceneMaster : MonoBehaviour
         transitionCanvas.gameObject.SetActive(false);
         isChangingScene = false;
     }
-    void registerEffect()
+    TransitionEffect registerEffect()
     {
         GameObject transitionObject = transitionCanvas.gameObject;
         foreach (StringEffectPair pair in registeredTransitionsNames)
@@ -87,15 +88,19 @@ public class SceneMaster : MonoBehaviour
             if (pair.name.Equals(transitionObject.name))
             {
                 // If the name of the transition object that is trying to be assigned is already in the registered effects list, ignore the new assignment
-                transitionCanvas = pair.effect;
                 Debug.Log("[SceneMaster] The effect received is already registered. Using existing registry.");
-                return;
+                return pair.effect;
             }
         }
-        transitionObject.transform.SetParent(this.transform, false);
-        registeredTransitionsNames.Add(new StringEffectPair(transitionObject.name, transitionCanvas));
-
+        transitionObject.SetActive(true);
+        GameObject newTransitionObject = Instantiate(transitionObject, transform);
+        transitionObject.SetActive(false);
+        newTransitionObject.name = transitionObject.name;
+        TransitionEffect newEffect = newTransitionObject.GetComponent<TransitionEffect>();
+        registeredTransitionsNames.Add(new StringEffectPair(newTransitionObject.name, newEffect));
+        
         Debug.Log("[SceneMaster] New effect received and registered.");
+        return newEffect;
     }
 
     [Serializable]

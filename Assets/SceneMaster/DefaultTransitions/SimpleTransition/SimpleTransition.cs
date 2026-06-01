@@ -4,11 +4,15 @@ using UnityEngine;
 public class SimpleTransition : TransitionEffect
 {
     Animator animator;
-    bool isPlaying = false;
+    bool isPlaying;
 
+    void Awake()
+    {
+        isPlaying = false;
+        animator = GetComponent<Animator>();
+    }
     void Start()
     {
-        animator = GetComponent<Animator>();
         gameObject.SetActive(false);
     }
     public override IEnumerator StartTransition()
