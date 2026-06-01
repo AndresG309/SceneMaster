@@ -91,7 +91,7 @@ public class SceneMaster : MonoBehaviour
                 transitionCanvas = pair.effect;
             }
         }
-        transitionObject.transform.parent = transform;
+        transitionObject.transform.SetParent(transform, false);
         registeredTransitionsNames.Add(new StringEffectPair(transitionObject.name, transitionCanvas));
         
         Debug.Log("[SceneMaster] New effect received and registered.");

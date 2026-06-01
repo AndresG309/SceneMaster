@@ -6,9 +6,11 @@ public class Tester_SceneMaster : MonoBehaviour
 {
     public static Tester_SceneMaster Instance;
     public TransitionEffect effect;
+    public bool destroyOnLoad = true;
     int index;
     void Awake()
     {
+        if (destroyOnLoad) return;
         if (Instance != null && Instance != this)
         {
             Destroy(this.gameObject);
