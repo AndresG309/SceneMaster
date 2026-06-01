@@ -29,6 +29,8 @@ public class SceneMaster : MonoBehaviour
     void Start()
     {
         isChangingScene = false;
+        CurrentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+
         if (defaultTransition == null)
         {
             Debug.LogWarning("[SceneMaster] Default Transition missing.");
@@ -45,6 +47,27 @@ public class SceneMaster : MonoBehaviour
             }
         }
     }
+    #region API PÚBLICA
+
+    public int CurrentSceneIndex { get; private set; }
+    public string CurrentSceneName => SceneManager.GetActiveScene().name;
+
+    /// <summary>
+    /// Transitions to a scene by its name
+    /// </summary>
+    public void TransitionToScene(string sceneName, TransitionEffect transition = null, IEnumerator callback = null)
+    {
+        int sceneIndex = GetSceneIndex(sceneName);
+        if (sceneIndex == -1)
+        {
+            Debug.LogError($"[SceneMaster] Scene '{sceneName}' not found in Build Settings.");
+            return;
+        }
+        TransitionToScene(sceneIndex, transition, callback);
+    }
+    /// <summary>
+    /// Transitions to a scene by its index in build settings
+    /// </summary>
     public void TransitionToScene(int index, TransitionEffect transition = null, IEnumerator callback = null)
     {
         if (isChangingScene) return;
@@ -65,6 +88,22 @@ public class SceneMaster : MonoBehaviour
         StopAllCoroutines();
         StartCoroutine(performTransition(index, callback));
     }
+    #endregion
+    #region Métodos privados
+    int GetSceneIndex(string sceneName)
+    {
+        int sceneCount = SceneManager.sceneCountInBuildSettings;
+        for (int i = 0; i < sceneCount; i++)
+        {
+            string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
+            string nameFromPath = System.IO.Path.GetFileNameWithoutExtension(scenePath);
+            if (nameFromPath == sceneName)
+            {
+                return i;
+            }
+        }
+        return -1;
+    }
 
     IEnumerator performTransition(int index, IEnumerator callback)
     {
@@ -73,6 +112,7 @@ public class SceneMaster : MonoBehaviour
         yield return null;
         yield return transitionCanvas.StartTransition();
         SceneManager.LoadScene(index);
+        CurrentSceneIndex = index;
         if (callback != null) yield return callback;
         yield return transitionCanvas.EndTransition();
         yield return null;
@@ -93,11 +133,10 @@ public class SceneMaster : MonoBehaviour
         }
         transitionObject.transform.SetParent(transform, false);
         registeredTransitionsNames.Add(new StringEffectPair(transitionObject.name, transitionCanvas));
-        
+
         Debug.Log("[SceneMaster] New effect received and registered.");
     }
-
-    [Serializable]
+    #endregion
     class StringEffectPair
     {
         public string name;

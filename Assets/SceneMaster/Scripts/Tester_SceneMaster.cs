@@ -7,6 +7,12 @@ public class Tester_SceneMaster : MonoBehaviour
     public static Tester_SceneMaster Instance;
     public TransitionEffect effect;
     public bool destroyOnLoad = true;
+    [Header("Use name for changing scene")]
+    public bool useName = false;
+    public string sceneName = "1";
+    [Header("Use index for changing scene\n(Wont work if 'Use Name' is active)")]
+    public bool changeToNextSceneOnBuildSettings = false;
+    public int sceneIndex = 0;
     int index;
     void Awake()
     {
@@ -26,19 +32,44 @@ public class Tester_SceneMaster : MonoBehaviour
 
         if (Input.anyKeyDown)
         {
-            index = SceneManager.GetActiveScene().buildIndex + 1;
-            if (index >= SceneManager.sceneCountInBuildSettings) index = 0;
-            if (Input.GetKeyDown(KeyCode.Return))
+            if (useName)
             {
-                SceneMaster.Instance.TransitionToScene(index, effect, callbackFunction());
-            }
-            else if (Input.GetKeyDown(KeyCode.Space))
-            {
-                SceneMaster.Instance.TransitionToScene(index, effect);
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    SceneMaster.Instance.TransitionToScene(sceneName, effect, callbackFunction());
+                }
+                else if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    SceneMaster.Instance.TransitionToScene(sceneName, effect);
+                }
+                else
+                {
+                    SceneMaster.Instance.TransitionToScene(sceneName);
+                }
             }
             else
             {
-                SceneMaster.Instance.TransitionToScene(index);
+                if (changeToNextSceneOnBuildSettings)
+                {
+                index = SceneManager.GetActiveScene().buildIndex + 1;
+                if (index >= SceneManager.sceneCountInBuildSettings) index = 0;
+                }
+                else
+                {
+                    index = sceneIndex;
+                }
+                if (Input.GetKeyDown(KeyCode.Return))
+                {
+                    SceneMaster.Instance.TransitionToScene(index, effect, callbackFunction());
+                }
+                else if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    SceneMaster.Instance.TransitionToScene(index, effect);
+                }
+                else
+                {
+                    SceneMaster.Instance.TransitionToScene(index);
+                }
             }
         }
     }

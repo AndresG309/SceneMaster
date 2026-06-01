@@ -153,6 +153,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   effect: {fileID: 382397046}
   destroyOnLoad: 1
+  useName: 1
+  sceneName: 1
+  changeToNextSceneOnBuildSettings: 0
+  sceneIndex: 0
 --- !u!4 &12277085
 Transform:
   m_ObjectHideFlags: 0
