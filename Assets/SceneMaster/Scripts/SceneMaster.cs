@@ -127,17 +127,20 @@ public class SceneMaster : MonoBehaviour
         isChangingScene = true;
         transitionCanvas.gameObject.SetActive(true);
         yield return null;
-        yield return transitionCanvas.StartTransition();
         if (loadAsync)
         {
             AsyncOperation asyncOp = SceneManager.LoadSceneAsync(index);
             asyncOp.allowSceneActivation = false;
             yield return new WaitUntil(() => asyncOp.progress >= 0.9f);
+            // Activate Transition after the scene is loaded at 90%
+            // This prevents the transition to be stopped too much time 
+            yield return transitionCanvas.StartTransition();
             asyncOp.allowSceneActivation = true;
             yield return new WaitUntil(() => asyncOp.isDone);
         }
         else
         {
+            yield return transitionCanvas.StartTransition();
             SceneManager.LoadScene(index);
         }
         CurrentSceneIndex = index;
