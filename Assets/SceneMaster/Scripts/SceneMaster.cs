@@ -52,55 +52,43 @@ public class SceneMaster : MonoBehaviour
     public int CurrentSceneIndex { get; private set; }
     public string CurrentSceneName => SceneManager.GetActiveScene().name;
 
-    #region Overcharges
+    // =================================================================================
+    // FLUENT BUILDER
+    // =================================================================================
 
-    // =======================================================
-    // With Index
-    // =======================================================
-    public void TransitionToScene(int index) => TransitionToScene(index, null, null, false);
-    public void TransitionToScene(int index, bool loadAsync) => TransitionToScene(index, null, null, loadAsync);
-    public void TransitionToScene(int index, TransitionEffect transition) => TransitionToScene(index, transition, null, false);
-    public void TransitionToScene(int index, TransitionEffect transition, bool loadAsync) => TransitionToScene(index, transition, null, loadAsync);
-    public void TransitionToScene(int index, IEnumerator callback) => TransitionToScene(index, null, callback, false);
-    public void TransitionToScene(int index, IEnumerator callback, bool loadAsync) => TransitionToScene(index, null, callback, loadAsync);
-
-    // =======================================================
-    // With Name
-    // =======================================================
-    public void TransitionToScene(string sceneName) => TransitionToScene(sceneName, null, null, false);
-    public void TransitionToScene(string sceneName, bool loadAsync) => TransitionToScene(sceneName, null, null, loadAsync);
-    public void TransitionToScene(string sceneName, TransitionEffect transition) => TransitionToScene(sceneName, transition, null, false);
-    public void TransitionToScene(string sceneName, TransitionEffect transition, bool loadAsync) => TransitionToScene(sceneName, transition, null, loadAsync);
-    public void TransitionToScene(string sceneName, IEnumerator callback) => TransitionToScene(sceneName, null, callback, false);
-    public void TransitionToScene(string sceneName, IEnumerator callback, bool loadAsync) => TransitionToScene(sceneName, null, callback, loadAsync);
-
-    #endregion
-
-    public void TransitionToScene(string sceneName, TransitionEffect transition, IEnumerator callback, bool loadAsync)
+    public SceneTransitionBuilder TransitionTo(int index)
     {
-        int sceneIndex = GetSceneIndex(sceneName);
-        if (sceneIndex == -1)
-        {
-            Debug.LogError($"[SceneMaster] Scene '{sceneName}' not found in Build Settings.");
-            return;
-        }
-        TransitionToScene(sceneIndex, transition, callback, loadAsync);
+        ValidateIndex(index);
+        return new SceneTransitionBuilder(this, index);
     }
+    public SceneTransitionBuilder TransitionTo(string name)
+    {
+        int index = GetSceneIndex(name);
+        return TransitionTo(index);
+    }
+
+    // =================================================================================
+    // PERFORM THE TRANSITION
+    // =================================================================================
     public void TransitionToScene(int index, TransitionEffect transition, IEnumerator callback, bool loadAsync)
     {
-        if (isChangingScene) return;
+        if (isChangingScene)
+        {
+            Debug.LogWarning("[SceneMaster] Already changing scene. Ignoring new request.");
+            return;
+        }
         if (transition != null)
         {
             transitionCanvas = transition;
             registerEffect();
         }
-        else
+        else if (defaultTransition != null)
         {
             transitionCanvas = defaultTransition;
         }
-        if (transitionCanvas == null)
+        else
         {
-            Debug.LogWarning("[SceneMaster] There is no transition assigned.");
+            Debug.LogWarning("[SceneMaster] There is no transition neither default transition assigned. Ignoring request.");
             return;
         }
         StopAllCoroutines();
@@ -122,6 +110,16 @@ public class SceneMaster : MonoBehaviour
             }
         }
         return -1;
+    }
+    void ValidateIndex(int index)
+    {
+        if (index < 0 || index >= SceneManager.sceneCountInBuildSettings)
+        {
+            throw new ArgumentOutOfRangeException(
+                nameof(index),
+                $"Scene index {index} is not configured in Build Settings."
+            );
+        }
     }
 
     IEnumerator performTransition(int index, IEnumerator callback, bool loadAsync)

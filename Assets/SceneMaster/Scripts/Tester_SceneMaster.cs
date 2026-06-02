@@ -30,22 +30,30 @@ public class Tester_SceneMaster : MonoBehaviour
     }
     void Update()
     {
-
         if (Input.anyKeyDown)
         {
             if (useName)
             {
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    SceneMaster.Instance.TransitionToScene(sceneName, effect, callbackFunction(), changeSceneAsync);
+                    var builder = SceneMaster.Instance.TransitionTo(sceneName)
+                        .WithTransitionEffect(effect)
+                        .WithCallback(callbackFunction());
+                    if (changeSceneAsync) builder.LoadAsync();
+                    builder.Execute();
                 }
                 else if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    SceneMaster.Instance.TransitionToScene(sceneName, effect, changeSceneAsync);
+                    var builder = SceneMaster.Instance.TransitionTo(sceneName)
+                        .WithTransitionEffect(effect);
+                    if (changeSceneAsync) builder.LoadAsync();
+                    builder.Execute();
                 }
                 else
                 {
-                    SceneMaster.Instance.TransitionToScene(sceneName, changeSceneAsync);
+                    var builder = SceneMaster.Instance.TransitionTo(sceneName);
+                    if (changeSceneAsync) builder.LoadAsync();
+                    builder.Execute();
                 }
             }
             else
@@ -61,15 +69,24 @@ public class Tester_SceneMaster : MonoBehaviour
                 }
                 if (Input.GetKeyDown(KeyCode.Return))
                 {
-                    SceneMaster.Instance.TransitionToScene(index, effect, callbackFunction(), changeSceneAsync);
+                    var builder = SceneMaster.Instance.TransitionTo(index)
+                        .WithTransitionEffect(effect)
+                        .WithCallback(callbackFunction());
+                    if (changeSceneAsync) builder.LoadAsync();
+                    builder.Execute();
                 }
                 else if (Input.GetKeyDown(KeyCode.Space))
                 {
-                    SceneMaster.Instance.TransitionToScene(index, effect, changeSceneAsync);
+                    var builder = SceneMaster.Instance.TransitionTo(index)
+                        .WithTransitionEffect(effect);
+                    if (changeSceneAsync) builder.LoadAsync();
+                    builder.Execute();
                 }
                 else
                 {
-                    SceneMaster.Instance.TransitionToScene(index, changeSceneAsync);
+                    var builder = SceneMaster.Instance.TransitionTo(index);
+                    if (changeSceneAsync) builder.LoadAsync();
+                    builder.Execute();
                 }
             }
         }
