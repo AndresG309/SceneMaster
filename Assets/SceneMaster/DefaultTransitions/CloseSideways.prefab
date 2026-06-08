@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5400176843685189070}
   - component: {fileID: 1019025997274325380}
   - component: {fileID: 1773453070657728467}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Left
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -86,7 +86,7 @@ GameObject:
   - component: {fileID: 229943342308807746}
   - component: {fileID: 4618452280747593431}
   - component: {fileID: 3628554097605943031}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Right
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -163,7 +163,7 @@ GameObject:
   - component: {fileID: 7313454962831162957}
   - component: {fileID: 6457295100613871808}
   - component: {fileID: 1765006125477209836}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: CloseSideways
   m_TagString: Untagged
   m_Icon: {fileID: 0}
