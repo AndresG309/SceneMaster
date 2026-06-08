@@ -6,18 +6,20 @@ public class Tester_SceneMaster : MonoBehaviour
 {
     public static Tester_SceneMaster Instance;
     public TransitionEffect effect;
-    public bool destroyOnLoad = true;
+    public bool useSingleton = false;
     public bool changeSceneAsync = false;
+
     [Header("Use name for changing scene")]
     public bool useName = false;
     public string sceneName = "1";
+
     [Header("Use index for changing scene\n(Wont work if 'Use Name' is active)")]
     public bool changeToNextSceneOnBuildSettings = false;
     public int sceneIndex = 0;
-    int index;
+
     void Awake()
     {
-        if (destroyOnLoad) return;
+        if (!useSingleton) return;
         if (Instance != null && Instance != this)
         {
             Destroy(this.gameObject);
@@ -28,78 +30,54 @@ public class Tester_SceneMaster : MonoBehaviour
             DontDestroyOnLoad(this.gameObject);
         }
     }
+
     void Update()
     {
         if (Input.anyKeyDown)
         {
-            if (useName)
-            {
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    var builder = SceneMaster.Instance.TransitionTo(sceneName)
-                        .WithTransitionEffect(effect)
-                        .WithCallback(callbackFunction());
-                    if (changeSceneAsync) builder.LoadAsync();
-                    builder.Execute();
-                }
-                else if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    var builder = SceneMaster.Instance.TransitionTo(sceneName)
-                        .WithTransitionEffect(effect);
-                    if (changeSceneAsync) builder.LoadAsync();
-                    builder.Execute();
-                }
-                else
-                {
-                    var builder = SceneMaster.Instance.TransitionTo(sceneName);
-                    if (changeSceneAsync) builder.LoadAsync();
-                    builder.Execute();
-                }
-            }
-            else
-            {
-                if (changeToNextSceneOnBuildSettings)
-                {
-                    index = SceneManager.GetActiveScene().buildIndex + 1;
-                    if (index >= SceneManager.sceneCountInBuildSettings) index = 0;
-                }
-                else
-                {
-                    index = sceneIndex;
-                }
-                if (Input.GetKeyDown(KeyCode.Return))
-                {
-                    var builder = SceneMaster.Instance.TransitionTo(index)
-                        .WithTransitionEffect(effect)
-                        .WithCallback(callbackFunction());
-                    if (changeSceneAsync) builder.LoadAsync();
-                    builder.Execute();
-                }
-                else if (Input.GetKeyDown(KeyCode.Space))
-                {
-                    var builder = SceneMaster.Instance.TransitionTo(index)
-                        .WithTransitionEffect(effect);
-                    if (changeSceneAsync) builder.LoadAsync();
-                    builder.Execute();
-                }
-                else
-                {
-                    var builder = SceneMaster.Instance.TransitionTo(index);
-                    if (changeSceneAsync) builder.LoadAsync();
-                    builder.Execute();
-                }
-            }
+            HandleSceneTransition();
         }
     }
+
+    void HandleSceneTransition()
+    {
+        var builder = useName
+            ? SceneMaster.Instance.TransitionTo(sceneName)
+            : SceneMaster.Instance.TransitionTo(GetSceneIndex());
+
+        // Transition effect (Enter and Space)
+        if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
+        {
+            builder.WithTransitionEffect(effect);
+        }
+
+        // Use callback (Enter)
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            builder.WithCallback(callbackFunction());
+        }
+
+        if (changeSceneAsync)
+            builder.LoadAsync();
+
+        builder.Execute();
+    }
+
+    int GetSceneIndex()
+    {
+        if (changeToNextSceneOnBuildSettings)
+        {
+            int index = SceneManager.GetActiveScene().buildIndex + 1;
+            return index >= SceneManager.sceneCountInBuildSettings ? 0 : index;
+        }
+        return sceneIndex;
+    }
+
     IEnumerator callbackFunction()
     {
-        Debug.Log("Iniciando callback desde Tester_SceneMaster");
+        Debug.Log("[Tester_SceneMaster] Starting callback function");
         yield return new WaitForSeconds(3f);
-        Debug.Log("Callback desde Tester_SceneMaster terminado");
-    }
-    public void setMastersEffect()
-    {
-
+        Debug.Log("[Tester_SceneMaster] Ending callback function");
     }
 }
 
