@@ -14,4 +14,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Imported Assets/Sun_Temple/Scenes/DemoScene.unity
     guid: d8f213b28287d8b4dab42cf4a34f94e5
+  - enabled: 1
+    path: Assets/SceneMaster/Default Loading Screens/With Progress Bar/LoadingScreenWithProgressBar.unity
+    guid: c2e13ac82713a3743a523e1213602c3b
   m_configObjects: {}

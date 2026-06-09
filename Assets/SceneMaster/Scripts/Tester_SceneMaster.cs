@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,6 +17,10 @@ public class Tester_SceneMaster : MonoBehaviour
     [Header("Use index for changing scene\n(Wont work if 'Use Name' is active)")]
     public bool changeToNextSceneOnBuildSettings = false;
     public int sceneIndex = 0;
+
+    [Header("Use loading screen")]
+    public bool overrideCurrentLoadingScreen = false;
+    public string loadingScreenSceneName;
 
     void Awake()
     {
@@ -60,6 +65,7 @@ public class Tester_SceneMaster : MonoBehaviour
         // Use Load Screen
         if (Input.GetKeyDown(KeyCode.L))
         {
+            if (overrideCurrentLoadingScreen) SceneMaster.Instance.LoadingScreenSceneName = loadingScreenSceneName;
             builder.WithLoadingScreen();
         }
 

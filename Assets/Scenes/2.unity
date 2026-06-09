@@ -158,6 +158,8 @@ MonoBehaviour:
   sceneName: 1
   changeToNextSceneOnBuildSettings: 1
   sceneIndex: 0
+  overrideCurrentLoadingScreen: 1
+  loadingScreenSceneName: LoadingScreenWithProgressBar 1
 --- !u!4 &12277085
 Transform:
   m_ObjectHideFlags: 0

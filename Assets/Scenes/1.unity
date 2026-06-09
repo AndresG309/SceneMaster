@@ -575,6 +575,8 @@ MonoBehaviour:
   sceneName: 2
   changeToNextSceneOnBuildSettings: 1
   sceneIndex: 0
+  overrideCurrentLoadingScreen: 0
+  loadingScreenSceneName: 
 --- !u!4 &1516264758
 Transform:
   m_ObjectHideFlags: 0
@@ -591,11 +593,6 @@ Transform:
   - {fileID: 2092754635}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2074692734 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5388827137460210529, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
-  m_PrefabInstance: {fileID: 6963621063188518537}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2091989350
 GameObject:
   m_ObjectHideFlags: 0
@@ -863,6 +860,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2311174385028093190, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
+      propertyPath: m_SortingOrder
+      value: 78
+      objectReference: {fileID: 0}
     - target: {fileID: 3225912087742943160, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -874,7 +875,7 @@ PrefabInstance:
     - target: {fileID: 6157470328914930282, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
       propertyPath: loadingScreenObject
       value: 
-      objectReference: {fileID: 2074692734}
+      objectReference: {fileID: 0}
     - target: {fileID: 6479607259641432581, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
       propertyPath: m_Name
       value: SceneMaster
