@@ -811,6 +811,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1102422284901355161, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
+      propertyPath: m_Color.b
+      value: 0.1716981
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102422284901355161, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
+      propertyPath: m_Color.g
+      value: 0.33912623
+      objectReference: {fileID: 0}
+    - target: {fileID: 1102422284901355161, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2028456415850674319, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -852,6 +864,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3225912087742943160, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3225912087742943160, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
@@ -862,6 +878,10 @@ PrefabInstance:
     - target: {fileID: 6479607259641432581, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
       propertyPath: m_Name
       value: SceneMaster
+      objectReference: {fileID: 0}
+    - target: {fileID: 7306771375594425149, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
+      propertyPath: m_Value
+      value: 0.209
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects:

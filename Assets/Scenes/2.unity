@@ -152,11 +152,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effect: {fileID: 382397046}
-  destroyOnLoad: 1
+  useSingleton: 0
   changeSceneAsync: 1
-  useName: 1
+  useName: 0
   sceneName: 1
-  changeToNextSceneOnBuildSettings: 0
+  changeToNextSceneOnBuildSettings: 1
   sceneIndex: 0
 --- !u!4 &12277085
 Transform:

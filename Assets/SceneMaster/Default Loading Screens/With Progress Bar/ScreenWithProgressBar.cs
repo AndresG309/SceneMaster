@@ -12,10 +12,13 @@ public class ScreenWithProgressBar : LoadingScreen
     {
         gameObject.SetActive(false);
     }
-    public override void Activate(AsyncOperation op)
+    public override void Configure()
     {
         progressBar.value = 0;
         gameObject.SetActive(true);
+    }
+    public override void Activate(AsyncOperation op)
+    {
         asyncOp = op;
         StartCoroutine(StartLoading());
     }

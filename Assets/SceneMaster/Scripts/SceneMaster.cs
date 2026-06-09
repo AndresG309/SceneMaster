@@ -83,6 +83,7 @@ public class SceneMaster : MonoBehaviour
         {
             transitionCanvas = transition;
             RegisterEffect();
+            defaultTransition = transitionCanvas;
         }
         else if (defaultTransition != null)
         {
@@ -129,51 +130,71 @@ public class SceneMaster : MonoBehaviour
         isChangingScene = true;
         transitionCanvas.gameObject.SetActive(true);
         yield return null;
-        // -------------------- START AND WAIT
-        if (loadAsync)
-        {
-            // Start loading operation
-            AsyncOperation asyncOp = SceneManager.LoadSceneAsync(index);
-            asyncOp.allowSceneActivation = false;
 
-            if (useLoadingScreen)
-            {
-                // In
-                yield return transitionCanvas.StartTransition();
-                loadingScreen.gameObject.SetActive(true);
-                yield return null;
-                loadingScreen.Activate(asyncOp);
-                yield return transitionCanvas.EndTransition();
-                // Load
-                yield return new WaitUntil(() => asyncOp.progress >= 0.9f);
-                asyncOp.allowSceneActivation = true;
-                // Out
-                yield return transitionCanvas.StartTransition();
-                loadingScreen.Deactivate();
-                loadingScreen.gameObject.SetActive(false);
-                yield return null;
-                yield return new WaitUntil(() => asyncOp.isDone);
-            }
-            else
-            {
-                yield return new WaitUntil(() => asyncOp.progress >= 0.9f);
-                yield return transitionCanvas.StartTransition();
-                asyncOp.allowSceneActivation = true;
-                yield return new WaitUntil(() => asyncOp.isDone);
-            }
+        // Execute the appropriate loading strategy
+        if (loadAsync && useLoadingScreen)
+        {
+            yield return PerformAsyncTransitionWithLoadingScreen(index);
+        }
+        else if (loadAsync)
+        {
+            yield return PerformAsyncTransition(index);
         }
         else
         {
-            yield return transitionCanvas.StartTransition();
-            SceneManager.LoadScene(index);
+            yield return PerformSyncTransition(index);
         }
-        // ----------------- INVOKE CALLBACK AND FINISH THE TRANSITION
+
+        // Finish the transition
+        yield return null;
         CurrentSceneIndex = index;
         if (callback != null) yield return callback;
         yield return transitionCanvas.EndTransition();
         yield return null;
         transitionCanvas.gameObject.SetActive(false);
         isChangingScene = false;
+    }
+
+    IEnumerator PerformAsyncTransitionWithLoadingScreen(int index)
+    {
+
+        // Transition In - Show loading screen
+        yield return transitionCanvas.StartTransition();
+        loadingScreen.gameObject.SetActive(true);
+        yield return null;
+        loadingScreen.Configure();
+        yield return transitionCanvas.EndTransition();
+        AsyncOperation asyncOp = SceneManager.LoadSceneAsync(index);
+        asyncOp.allowSceneActivation = false;
+        loadingScreen.Activate(asyncOp);
+
+        // Wait for loading to complete
+        yield return new WaitUntil(() => asyncOp.progress >= 0.9f);
+        asyncOp.allowSceneActivation = true;
+
+        // Transition Out - Hide loading screen
+        yield return new WaitUntil(() => asyncOp.isDone);
+        yield return transitionCanvas.StartTransition();
+        loadingScreen.Deactivate();
+        loadingScreen.gameObject.SetActive(false);
+    }
+
+    IEnumerator PerformAsyncTransition(int index)
+    {
+        AsyncOperation asyncOp = SceneManager.LoadSceneAsync(index);
+        asyncOp.allowSceneActivation = false;
+
+        // Wait for scene to load before starting transition
+        yield return new WaitUntil(() => asyncOp.progress >= 0.9f);
+        yield return transitionCanvas.StartTransition();
+        asyncOp.allowSceneActivation = true;
+        yield return new WaitUntil(() => asyncOp.isDone);
+    }
+
+    IEnumerator PerformSyncTransition(int index)
+    {
+        yield return transitionCanvas.StartTransition();
+        SceneManager.LoadScene(index);
     }
     void RegisterEffect()
     {
