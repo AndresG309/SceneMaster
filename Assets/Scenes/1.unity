@@ -449,7 +449,7 @@ GameObject:
   - component: {fileID: 949584228}
   - component: {fileID: 949584227}
   m_Layer: 5
-  m_Name: Canvas
+  m_Name: SceneDeco
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -569,7 +569,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effect: {fileID: 2092754637}
-  destroyOnLoad: 1
+  useSingleton: 0
   changeSceneAsync: 0
   useName: 0
   sceneName: 2
@@ -591,6 +591,11 @@ Transform:
   - {fileID: 2092754635}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2074692734 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5388827137460210529, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
+  m_PrefabInstance: {fileID: 6963621063188518537}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2091989350
 GameObject:
   m_ObjectHideFlags: 0
@@ -846,6 +851,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3225912087742943160, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6157470328914930282, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
+      propertyPath: loadingScreenObject
+      value: 
+      objectReference: {fileID: 2074692734}
     - target: {fileID: 6479607259641432581, guid: 4a23a4c4621a6ba408c18dfbb068bbcb, type: 3}
       propertyPath: m_Name
       value: SceneMaster

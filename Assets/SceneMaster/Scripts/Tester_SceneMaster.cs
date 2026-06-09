@@ -45,16 +45,22 @@ public class Tester_SceneMaster : MonoBehaviour
             ? SceneMaster.Instance.TransitionTo(sceneName)
             : SceneMaster.Instance.TransitionTo(GetSceneIndex());
 
-        // Transition effect (Enter and Space)
+        // Transition effect
         if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.Space))
         {
             builder.WithTransitionEffect(effect);
         }
 
-        // Use callback (Enter)
+        // Use callback
         if (Input.GetKeyDown(KeyCode.Return))
         {
             builder.WithCallback(callbackFunction());
+        }
+
+        // Use Load Screen
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            builder.WithLoadingScreen();
         }
 
         if (changeSceneAsync)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -9,6 +10,7 @@ public class SceneMaster : MonoBehaviour
     public static SceneMaster Instance { get; private set; }
     [Tooltip("When 'TransitionToScene' is called without giving a TransitionEffect component, this effect will be used. It is needed for this effect to be a child of the SceneMaster object")]
     public TransitionEffect defaultTransition;
+    public LoadingScreen loadingScreen;
 
     TransitionEffect transitionCanvas;
     List<StringEffectPair> registeredTransitionsNames = new();
@@ -70,7 +72,7 @@ public class SceneMaster : MonoBehaviour
     // =================================================================================
     // PERFORM THE TRANSITION
     // =================================================================================
-    public void TransitionToScene(int index, TransitionEffect transition, IEnumerator callback, bool loadAsync)
+    public void TransitionToScene(int index, TransitionEffect transition, IEnumerator callback, bool loadAsync, bool useLoadingScreen)
     {
         if (isChangingScene)
         {
@@ -80,7 +82,7 @@ public class SceneMaster : MonoBehaviour
         if (transition != null)
         {
             transitionCanvas = transition;
-            registerEffect();
+            RegisterEffect();
         }
         else if (defaultTransition != null)
         {
@@ -92,10 +94,10 @@ public class SceneMaster : MonoBehaviour
             return;
         }
         StopAllCoroutines();
-        StartCoroutine(performTransition(index, callback, loadAsync));
+        StartCoroutine(PerformTransition(index, callback, loadAsync, useLoadingScreen));
     }
-
     #endregion
+
     #region Internal methods
     int GetSceneIndex(string sceneName)
     {
@@ -122,27 +124,50 @@ public class SceneMaster : MonoBehaviour
         }
     }
 
-    IEnumerator performTransition(int index, IEnumerator callback, bool loadAsync)
+    IEnumerator PerformTransition(int index, IEnumerator callback, bool loadAsync, bool useLoadingScreen)
     {
         isChangingScene = true;
         transitionCanvas.gameObject.SetActive(true);
         yield return null;
+        // -------------------- START AND WAIT
         if (loadAsync)
         {
+            // Start loading operation
             AsyncOperation asyncOp = SceneManager.LoadSceneAsync(index);
             asyncOp.allowSceneActivation = false;
-            yield return new WaitUntil(() => asyncOp.progress >= 0.9f);
-            // Activate Transition after the scene is loaded at 90%
-            // This prevents the transition to be stopped too much time 
-            yield return transitionCanvas.StartTransition();
-            asyncOp.allowSceneActivation = true;
-            yield return new WaitUntil(() => asyncOp.isDone);
+
+            if (useLoadingScreen)
+            {
+                // In
+                yield return transitionCanvas.StartTransition();
+                loadingScreen.gameObject.SetActive(true);
+                yield return null;
+                loadingScreen.Activate(asyncOp);
+                yield return transitionCanvas.EndTransition();
+                // Load
+                yield return new WaitUntil(() => asyncOp.progress >= 0.9f);
+                asyncOp.allowSceneActivation = true;
+                // Out
+                yield return transitionCanvas.StartTransition();
+                loadingScreen.Deactivate();
+                loadingScreen.gameObject.SetActive(false);
+                yield return null;
+                yield return new WaitUntil(() => asyncOp.isDone);
+            }
+            else
+            {
+                yield return new WaitUntil(() => asyncOp.progress >= 0.9f);
+                yield return transitionCanvas.StartTransition();
+                asyncOp.allowSceneActivation = true;
+                yield return new WaitUntil(() => asyncOp.isDone);
+            }
         }
         else
         {
             yield return transitionCanvas.StartTransition();
             SceneManager.LoadScene(index);
         }
+        // ----------------- INVOKE CALLBACK AND FINISH THE TRANSITION
         CurrentSceneIndex = index;
         if (callback != null) yield return callback;
         yield return transitionCanvas.EndTransition();
@@ -150,7 +175,7 @@ public class SceneMaster : MonoBehaviour
         transitionCanvas.gameObject.SetActive(false);
         isChangingScene = false;
     }
-    void registerEffect()
+    void RegisterEffect()
     {
         GameObject transitionObject = transitionCanvas.gameObject;
         foreach (StringEffectPair pair in registeredTransitionsNames)

@@ -6,6 +6,7 @@ public class SceneTransitionBuilder
     TransitionEffect transition = null;
     IEnumerator callback = null;
     bool loadAsync = false;
+    bool useLoadingScreen = false;
     SceneMaster sceneMaster = null;
 
     public SceneTransitionBuilder(SceneMaster sceneMaster, int sceneIndex)
@@ -17,6 +18,13 @@ public class SceneTransitionBuilder
     public SceneTransitionBuilder WithTransitionEffect(TransitionEffect effect)
     {
         this.transition = effect;
+        return this;
+    }
+
+    public SceneTransitionBuilder WithLoadingScreen()
+    {
+        this.useLoadingScreen = true;
+        this.loadAsync = true;
         return this;
     }
 
@@ -34,7 +42,7 @@ public class SceneTransitionBuilder
 
     public void Execute()
     {
-        sceneMaster.TransitionToScene(sceneIndex, transition, callback, loadAsync);
+        sceneMaster.TransitionToScene(sceneIndex, transition, callback, loadAsync, useLoadingScreen);
     }
 
 }
