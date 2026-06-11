@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -75,16 +74,16 @@ public class SceneMaster : MonoBehaviour
     // =================================================================================
     // PERFORM THE TRANSITION
     // =================================================================================
-    public void TransitionToScene(int index, TransitionEffect transition, IEnumerator callback, bool loadAsync, bool useLoadingScreen)
+    public void PerformTransition(SceneTransitionRequest request)
     {
         if (isChangingScene)
         {
             Debug.LogWarning("[SceneMaster] Already changing scene. Ignoring new request.");
             return;
         }
-        if (transition != null)
+        if (request.transition != null)
         {
-            transitionCanvas = transition;
+            transitionCanvas = request.transition;
             RegisterEffect();
             defaultTransition = transitionCanvas;
         }
@@ -98,7 +97,7 @@ public class SceneMaster : MonoBehaviour
             return;
         }
         StopAllCoroutines();
-        StartCoroutine(PerformTransition(index, callback, loadAsync, useLoadingScreen));
+        StartCoroutine(TransitionSequence(request));
     }
     #endregion
 
@@ -121,6 +120,7 @@ public class SceneMaster : MonoBehaviour
     {
         if (index < 0 || index >= SceneManager.sceneCountInBuildSettings)
         {
+            isChangingScene = false;
             throw new ArgumentOutOfRangeException(
                 nameof(index),
                 $"Scene index {index} is not configured in Build Settings."
@@ -128,30 +128,30 @@ public class SceneMaster : MonoBehaviour
         }
     }
 
-    IEnumerator PerformTransition(int index, IEnumerator callback, bool loadAsync, bool useLoadingScreen)
+    IEnumerator TransitionSequence(SceneTransitionRequest request)
     {
         isChangingScene = true;
         transitionCanvas.gameObject.SetActive(true);
         yield return null;
 
         // Execute the appropriate loading strategy
-        if (loadAsync && useLoadingScreen)
+        if (request.loadAsync && request.useLoadingScreen)
         {
-            yield return PerformAsyncTransitionWithLoadingScreen(index);
+            yield return PerformAsyncTransitionWithLoadingScreen(request.sceneIndex);
         }
-        else if (loadAsync)
+        else if (request.loadAsync)
         {
-            yield return PerformAsyncTransition(index);
+            yield return PerformAsyncTransition(request.sceneIndex);
         }
         else
         {
-            yield return PerformSyncTransition(index);
+            yield return PerformSyncTransition(request.sceneIndex);
         }
 
         // Finish the transition
         yield return null;
-        CurrentSceneIndex = index;
-        if (callback != null) yield return callback;
+        CurrentSceneIndex = request.sceneIndex;
+        if (request.callback != null) yield return request.callback;
         yield return transitionCanvas.EndTransition();
         yield return null;
         transitionCanvas.gameObject.SetActive(false);
