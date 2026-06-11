@@ -62,7 +62,7 @@ public class SceneMaster : MonoBehaviour
 
     public SceneTransitionBuilder TransitionTo(int index)
     {
-        ValidateIndex(index);
+        ValidateIndex(index, "Please check the name or buildIndex of the scene you are trying to load.");
         return new SceneTransitionBuilder(this, index);
     }
     public SceneTransitionBuilder TransitionTo(string name)
@@ -116,14 +116,14 @@ public class SceneMaster : MonoBehaviour
         }
         return -1;
     }
-    void ValidateIndex(int index)
+    void ValidateIndex(int index, string customErrorMessage = null)
     {
         if (index < 0 || index >= SceneManager.sceneCountInBuildSettings)
         {
             isChangingScene = false;
             throw new ArgumentOutOfRangeException(
                 nameof(index),
-                $"Scene index {index} is not configured in Build Settings."
+                $"Scene index {index} is not configured in Build Settings. {customErrorMessage}"
             );
         }
     }
@@ -162,7 +162,7 @@ public class SceneMaster : MonoBehaviour
         if (LoadingScreenSceneName != lastSavedLoadingScreenSceneName)
         {
             loadingScreenSceneIndex = GetSceneIndex(LoadingScreenSceneName);
-            ValidateIndex(loadingScreenSceneIndex);
+            ValidateIndex(loadingScreenSceneIndex, "Please check the LoadingScreen scene name you are trying to use.");
             lastSavedLoadingScreenSceneName = LoadingScreenSceneName;
         }
         // Transition In - Show loading screen
