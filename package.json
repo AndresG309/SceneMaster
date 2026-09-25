@@ -2,7 +2,7 @@
   "name": "com.andresg09.scenemaster",
   "version": "1.0.0",
   "displayName": "SceneMaster",
-  "description": "An open-source Unity scene transition tool with animated visual effects and a fluent builder API, designed to support both custom transition designs (Check the documentation).",
+  "description": "A Unity scene transition tool with animated visual effects and a fluent builder API, designed to support custom transition designs (Check the documentation).",
   "unity": "2022.3",
   "author": {
     "name": "AndresG09",
