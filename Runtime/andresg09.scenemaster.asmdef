@@ -1,0 +1,14 @@
+{
+    "name": "andresg09.scenemaster",
+    "rootNamespace": "andresg09.scenemaster",
+    "references": [],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
