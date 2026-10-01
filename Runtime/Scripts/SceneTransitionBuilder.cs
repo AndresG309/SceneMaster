@@ -13,9 +13,10 @@ namespace AndresG09.SceneMaster
             this.request = new(sceneIndex);
         }
 
-        public SceneTransitionBuilder WithTransitionEffect(TransitionEffect effect)
+        public SceneTransitionBuilder WithTransitionEffect(TransitionEffect effect, bool setAsDefault = false)
         {
             this.request.transition = effect;
+            this.request.setEffectAsDefault = setAsDefault;
             return this;
         }
 

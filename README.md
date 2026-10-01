@@ -75,12 +75,20 @@ Pass a `TransitionEffect` component to use it for the request:
 ```csharp
 SceneMaster.Instance
 	.TransitionTo("Gameplay")
-	.WithTransitionEffect(myTransitionEffect)
+	.WithTransitionEffect(myEffect)
 	.Execute();
 ```
 
-When a custom effect is used, SceneMaster registers it and uses it as the new default effect for later transitions.<br>
-**(Dev Note: I need to review this behaviour again, im not sure if that is the way i coded it, i really dont think so haha).**
+By default, a custom effect is registered and used only for the current transition. To also make it the default effect for later transitions, pass `true` as the second argument:
+
+```csharp
+SceneMaster.Instance
+	.TransitionTo("Gameplay")
+	.WithTransitionEffect(myEffect, true)
+	.Execute();
+```
+
+Transitions without a custom effect use the current default effect.
 
 ### Asynchronous loading
 

@@ -87,7 +87,7 @@ namespace AndresG09.SceneMaster
             {
                 transitionCanvas = request.transition;
                 RegisterEffect();
-                defaultTransition = transitionCanvas;
+                if (request.setEffectAsDefault) defaultTransition = transitionCanvas;
             }
             else if (defaultTransition != null)
             {
