@@ -2,7 +2,9 @@
     "name": "andresg09.scenemaster.Editor",
     "rootNamespace": "andresg09.scenemaster.Editor",
     "references": [],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
