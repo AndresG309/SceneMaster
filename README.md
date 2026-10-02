@@ -140,7 +140,7 @@ SceneMaster.Instance
 | `SceneMaster.Instance` | Access the persistent manager singleton. |
 | `TransitionTo(string sceneName)` | Create a transition request using a scene file name. |
 | `TransitionTo(int sceneIndex)` | Create a transition request using a Build Settings index. |
-| `WithTransitionEffect(TransitionEffect effect)` | Use a specific effect for the request. |
+| `WithTransitionEffect(TransitionEffect effect, bool setAsDefault)` | Use a specific effect for the request and optionally make it the default effect. |
 | `WithCallback(IEnumerator callback)` | Run a coroutine after the destination scene loads. |
 | `LoadAsync()` | Load the destination scene asynchronously. |
 | `WithLoadingScreen()` | Load asynchronously through the configured loading screen scene. |
