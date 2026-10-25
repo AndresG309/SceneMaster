@@ -4,6 +4,11 @@ SceneMaster is a Unity scene transition tool with animated visual effects and a 
 
 It provides a single persistent `SceneMaster` object that can load scenes by name or build index, play transition effects, run callbacks, and optionally use asynchronous loading screens.
 
+<img src="https://raw.githubusercontent.com/AndresG309/public-assets-for-gh-readmes/main/QuickShowcaseOfSceneMaster.gif" alt="SceneMaster Showcase on a gif"/>
+
+> [!TIP]
+> _I made a video explaining the capacities of the tool (As shown in the previus gif) so you can check it [here](https://www.youtube.com/watch?v=xwsuXTfoONA) to get a better understanding of it. The video is in spanish but the automatic english subtitles are correct (I checked them)._
+
 ## Requirements
 
 - Unity `2022.3.62f3` is the version currently tested with this package.
